@@ -3,7 +3,6 @@ import { Request, Response } from 'express';
 
 class UserController {
   constructor(private userRepository: IUserRepository) {
-    this.userRepository = userRepository
   }
 
   public create = async (req: Request, res: Response): Promise<Response> => {

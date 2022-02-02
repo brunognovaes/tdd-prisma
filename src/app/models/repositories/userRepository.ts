@@ -9,7 +9,7 @@ type UserToCreate = {
   password: string,
 }
 
-export class UserRepository implements IUserRepository {
+class UserRepository implements IUserRepository {
   public create = async (user: UserToCreate): Promise<User> => {
     const userCreated = await prisma.user.create({ data: { ...user } })
     return userCreated
@@ -25,3 +25,5 @@ export class UserRepository implements IUserRepository {
     return usersFinded
   }
 }
+
+export default UserRepository

@@ -1,13 +1,7 @@
 import { IUserRepository } from '../../src/app/models/interfaces/IUserRepository' 
+import { User } from '@prisma/client'
 
-type User = {
-  name: string,
-  password: string,
-  email: string,
-  id?: number
-}
-
-export class UserRepositoryMock implements IUserRepository {
+class UserRepositoryMock implements IUserRepository {
   users?: User[]
   userId: number
   constructor() {
@@ -32,3 +26,5 @@ export class UserRepositoryMock implements IUserRepository {
     return this.users
   }
 }
+
+export default UserRepositoryMock

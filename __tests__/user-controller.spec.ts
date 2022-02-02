@@ -1,25 +1,35 @@
-
 type User = {
   name: string,
   password: string,
-  email: string
+  email: string,
+  id?: number
 }
+
 class UserController {
   constructor(private readonly userRepository: UserRepository) {}
-  async create(user: User): Promise<void> {
-    await this.userRepository.create(user)
+  async create(user: User): Promise<User> {
+    const userCreated = await this.userRepository.create(user)
+    return userCreated
   }
 }
 
 interface UserRepository {
-  create: (user: User) => Promise<void>
+  create: (user: User) => Promise<User>
 }
 
 class UserRepositoryMock implements UserRepository {
-  user?: Object
+  user?: User
+  userId: number
+  constructor() {
+    this.userId = 1
+  }
 
-  async create (user: User): Promise<void> {
+  async create (user: User): Promise<User> {
+    user.id = this.userId
     this.user = user
+    this.userId += 1
+
+    return this.user
   }
 }
 
@@ -37,8 +47,9 @@ describe('UserController create user', () => {
     const {sut, repository} = makeSut()
     const fakeUser: User = { name: 'Bruno', password: '123456', email: 'bucgomes@gmail.com' }
 
-    await sut.create(fakeUser)
+    const userCreated = await sut.create(fakeUser)
 
-    expect(repository.user).toBe(fakeUser)
+    expect(userCreated).toBe(repository.user)
+    expect(userCreated.id).toBe(1)
   })
 })

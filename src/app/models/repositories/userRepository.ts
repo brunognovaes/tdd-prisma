@@ -10,17 +10,17 @@ type UserToCreate = {
 }
 
 export class UserRepository implements IUserRepository {
-  async create (user: UserToCreate): Promise<User> {
-    const userCreated = await prisma.user.create({ data: user })
+  public create = async (user: UserToCreate): Promise<User> => {
+    const userCreated = await prisma.user.create({ data: { ...user } })
     return userCreated
   }
 
-  async findById (id: number): Promise<User | null> {
+  public findById = async (id: number): Promise<User | null> => {
     const userFinded = await prisma.user.findUnique({ where: { id } })
     return userFinded
   }
 
-  async findAll (): Promise<User[] | null> {
+  public findAll = async (): Promise<User[] | null> => {
     const usersFinded = await prisma.user.findMany()
     return usersFinded
   }

@@ -1,20 +1,9 @@
-const express = require('express')
-const routes = require('./routes')
+import express from 'express'
+import routes from './routes'
+const app = express()
 
-class App {
-  public readonly express
-  constructor() {
-    this.express = express()
-    
-  }
+app.use(express.json())
+app.use('/user', routes.userRouter)
 
-  middlewares() {
-    this.express.use(express.json())
-  }
 
-  routes() {
-    this.express.use(routes)
-  }
-}
-
-module.exports = new App().express
+export default app

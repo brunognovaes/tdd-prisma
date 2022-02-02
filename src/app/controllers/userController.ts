@@ -1,23 +1,27 @@
 import { IUserRepository } from '../models/interfaces/IUserRepository'
 import { Request, Response } from 'express';
 
-export class UserController {
-  constructor(private readonly userRepository: IUserRepository) {}
+class UserController {
+  constructor(private userRepository: IUserRepository) {
+    this.userRepository = userRepository
+  }
 
-  async create(req: Request, res: Response): Promise<Response> {
-    const { user } = req.body
+  public create = async (req: Request, res: Response): Promise<Response> => {
+    const user = req.body
     const userCreated = await this.userRepository.create(user)
     return res.json(userCreated)
   }
 
-  async findById(req: Request, res: Response): Promise<Response> {
+  public findById = async (req: Request, res: Response): Promise<Response> => {
     const { id } = req.params
     const userFinded = await this.userRepository.findById(parseInt(id))
     return res.json(userFinded)
   }
 
-  async findAll(_req: Request, res: Response): Promise<Response> {
+  public findAll = async (_req: Request, res: Response): Promise<Response> => {
     const allUsers = await this.userRepository.findAll()
     return res.json(allUsers)
   }
 }
+
+export default UserController

@@ -1,59 +1,11 @@
+import { UserController } from '../src/app/controllers/UserController'
+import { UserRepositoryMock } from './mocks/UserRepositoryMock'
+
 type User = {
   name: string,
   password: string,
   email: string,
   id?: number
-}
-
-class UserController {
-  constructor(private readonly userRepository: UserRepository) {}
-
-  async create(user: User): Promise<User> {
-    const userCreated = await this.userRepository.create(user)
-    return userCreated
-  }
-
-  async findById(id: number): Promise<User | null> {
-    const userFinded = await this.userRepository.findById(id)
-    return userFinded
-  }
-
-  async findAll(): Promise<User[] | null> {
-    const allUsers = await this.userRepository.findAll()
-    return allUsers
-  }
-}
-
-interface UserRepository {
-  create: (user: User) => Promise<User>
-  findById: (id: number) => Promise<User | null>
-  findAll: () => Promise<User[] | null>
-}
-
-class UserRepositoryMock implements UserRepository {
-  users?: User[]
-  userId: number
-  constructor() {
-    this.userId = 1
-    this.users = []
-  }
-
-  async create (user: User): Promise<User> {
-    user.id = this.userId
-    this.users.push(user)
-    this.userId += 1
-
-    return user
-  }
-
-  async findById (id: number): Promise<User | null> {
-    const userFinded = this.users.find((user) => user.id === id)
-    return userFinded ? userFinded : null
-  }
-
-  async findAll (): Promise<User[] | null> {
-    return this.users
-  }
 }
 
 const makeSut = () => {

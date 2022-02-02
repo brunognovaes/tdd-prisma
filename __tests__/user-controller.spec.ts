@@ -17,11 +17,17 @@ class UserController {
     const userFinded = await this.userRepository.findById(id)
     return userFinded
   }
+
+  async findAll(): Promise<User[] | null> {
+    const allUsers = await this.userRepository.findAll()
+    return allUsers
+  }
 }
 
 interface UserRepository {
   create: (user: User) => Promise<User>
-  findById: (id: number) => Promise<User>
+  findById: (id: number) => Promise<User | null>
+  findAll: () => Promise<User[] | null>
 }
 
 class UserRepositoryMock implements UserRepository {
@@ -44,6 +50,10 @@ class UserRepositoryMock implements UserRepository {
     const userFinded = this.users.find((user) => user.id === id)
     return userFinded ? userFinded : null
   }
+
+  async findAll (): Promise<User[] | null> {
+    return this.users
+  }
 }
 
 const makeSut = () => {
@@ -64,6 +74,7 @@ describe('UserController create user', () => {
     
     const userCreated = await sut.create(fakeUser1)
 
+    expect(repository.users).toHaveLength(1)
     expect(repository.users).toContain(userCreated)
     expect(userCreated.id).toBe(1)
   })
@@ -75,5 +86,19 @@ describe('UserController create user', () => {
     const userFinded = await sut.findById(userCreated.id)
     
     expect(userFinded).toBe(userCreated)
+  })
+
+  it('should find all Users', async () => {
+    const { sut } = makeSut()
+
+    const usersCreated = await Promise.all([
+      await sut.create(fakeUser1),
+      await sut.create(fakeUser2),
+    ])
+    const allUsers = await sut.findAll()
+
+    expect(allUsers).toHaveLength(2)
+    expect(allUsers).toContain(usersCreated[0])
+    expect(allUsers).toContain(usersCreated[1])
   })
 })

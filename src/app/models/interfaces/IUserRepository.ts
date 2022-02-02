@@ -1,9 +1,4 @@
-type User = {
-  name: string,
-  password: string,
-  email: string,
-  id?: number
-}
+import { User } from "@prisma/client"
 
 export interface IUserRepository {
     create: (user: User) => Promise<User>

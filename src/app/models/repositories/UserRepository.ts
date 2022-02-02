@@ -1,28 +1,27 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, User } from '@prisma/client'
 import { IUserRepository } from '../interfaces/IUserRepository'
 
 const prisma = new PrismaClient()
 
-type User = {
+type UserToCreate = {
   name: string,
-  password: string,
   email: string,
-  id?: number
+  password: string,
 }
 
 export class UserRepository implements IUserRepository {
-  create (user: User): Promise<User> {
-    const userCreated = prisma.user.create({ data: user })
+  async create (user: UserToCreate): Promise<User> {
+    const userCreated = await prisma.user.create({ data: user })
     return userCreated
   }
 
-  findById (id: number): Promise<User | null> {
-    const userFinded = prisma.user.findUnique({ where: { id } })
+  async findById (id: number): Promise<User | null> {
+    const userFinded = await prisma.user.findUnique({ where: { id } })
     return userFinded
   }
 
-  findAll (): Promise<User[] | null> {
-    const usersFinded = prisma.user.findMany()
+  async findAll (): Promise<User[] | null> {
+    const usersFinded = await prisma.user.findMany()
     return usersFinded
   }
 }
